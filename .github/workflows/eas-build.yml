@@ -1,0 +1,82 @@
+name: EAS Build Android Production
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'LICENSE'
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  BUN_VERSION: latest
+  EAS_BUILD_PROFILE: production
+
+jobs:
+  build:
+    name: Build Android Production APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+
+    steps:
+      - name: 🏗 Setup repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🏗 Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 📦 Install dependencies
+        run: bun install
+
+      - name: 🧹 Lint and type check
+        run: |
+          bun run lint --if-present
+          bun run type-check --if-present
+
+      - name: 🏗 Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: � EAS Build Info
+        run: |
+          eas build:version:get --platform android
+          eas build:list --platform android --limit 5 --non-interactive
+
+      - name: 🚀 Build Android APK
+        run: |
+          eas build \
+            --platform android \
+            --profile ${{ env.EAS_BUILD_PROFILE }} \
+            --non-interactive \
+            --clear-cache \
+            --wait
+
+      - name: � Get build URL
+        id: build-url
+        run: |
+          BUILD_URL=$(eas build:list --platform android --limit 1 --json --non-interactive | jq -r '.[0].artifacts.buildUrl // empty')
+          echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
+          echo "Build URL: $BUILD_URL"
+
+      - name: 📄 Create build summary
+        run: |
+          echo "## 🚀 Android Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Platform**: Android" >> $GITHUB_STEP_SUMMARY
+          echo "- **Profile**: ${{ env.EAS_BUILD_PROFILE }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.build-url.outputs.build_url }}" ]; then
+            echo "- **Download**: [${{ steps.build-url.outputs.build_url }}](${{ steps.build-url.outputs.build_url }})" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: 🎉 Build completed
+        run: |
+          echo "✅ Android build completed successfully!"
+          echo "🔗 Check the build summary above for download link"

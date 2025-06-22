@@ -1,0 +1,29 @@
+name: Build EAS Project for iOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up EAS CLI
+        uses: ./github/actions/setup-eas
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build iOS project
+        run: eas build --profile production --platform ios --non-interactive
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios-build
+          path: ./build/ios/*.ipa

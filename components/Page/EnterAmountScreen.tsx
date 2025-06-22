@@ -15,8 +15,12 @@ import { NumberButton } from '../Helper/NumberButton';
 // Import types and constants
 import { NavigationProps } from '../../types';
 
-export function EnterAmountScreen({ onNavigate }: NavigationProps) {
+export function EnterAmountScreen({
+  onNavigate,
+  showErrorToast
+}: NavigationProps) {
   const [amount, setAmount] = useState('');
+  const availableBalance = 50000; // Mock available balance
 
   const handleNumberPress = (num: string) => {
     if (num === '.' && amount.includes('.')) return;
@@ -27,6 +31,36 @@ export function EnterAmountScreen({ onNavigate }: NavigationProps) {
 
   const handleDelete = () => {
     setAmount(amount.slice(0, -1));
+  };
+
+  const handleContinue = () => {
+    const transferAmount = parseFloat(amount);
+
+    if (!transferAmount || transferAmount <= 0) {
+      showErrorToast?.(
+        'จำนวนเงินไม่ถูกต้อง',
+        'กรุณาระบุจำนวนเงินที่ต้องการโอน'
+      );
+      return;
+    }
+
+    if (transferAmount > availableBalance) {
+      showErrorToast?.(
+        'ยอดเงินไม่เพียงพอ',
+        `ยอดเงินคงเหลือในบัญชี ${ availableBalance.toLocaleString('th-TH', { minimumFractionDigits: 2 }) } บาท ไม่เพียงพอสำหรับการโอน ${ transferAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 }) } บาท`
+      );
+      return;
+    }
+
+    if (transferAmount > 50000) {
+      showErrorToast?.(
+        'จำนวนเงินเกินกำหนด',
+        'ไม่สามารถโอนเงินเกิน 50,000 บาทต่อครั้งได้'
+      );
+      return;
+    }
+
+    onNavigate('confirmTransfer');
   };
 
   return (
@@ -48,10 +82,13 @@ export function EnterAmountScreen({ onNavigate }: NavigationProps) {
         </View>
 
         {/* Amount Display */}
-        <View className="items-center mb-8">
+        <View className="items-center mb-6">
           <Text className="text-gray-400 mb-2">จำนวนเงิน (บาท)</Text>
           <Text className="text-white text-4xl font-bold">
             {amount || '0'}
+          </Text>
+          <Text className="text-gray-400 text-sm mt-2">
+            ยอดเงินคงเหลือ: {availableBalance.toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท
           </Text>
         </View>
 
@@ -86,9 +123,9 @@ export function EnterAmountScreen({ onNavigate }: NavigationProps) {
 
         {/* Continue Button */}
         <TouchableOpacity
-          className={`rounded-xl py-4 ${ amount ? 'bg-green-500' : 'bg-gray-600' }`}
+          className={`rounded-xl py-4 ${ amount ? 'bg-green-500 active:bg-green-600' : 'bg-gray-600' }`}
           disabled={!amount}
-          onPress={() => onNavigate('confirmTransfer')}
+          onPress={handleContinue}
         >
           <Text className="text-white text-center font-semibold text-lg">ดำเนินการต่อ</Text>
         </TouchableOpacity>

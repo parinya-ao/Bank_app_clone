@@ -6,6 +6,7 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 // Import components
@@ -18,11 +19,35 @@ import { Header } from './Header';
 import { QUICK_SERVICES, SERVICE_CARDS, USER_ACCOUNTS } from '../../constants';
 import { NavigationProps } from '../../types';
 
-export function HomeScreen({ onNavigate }: NavigationProps) {
+export function HomeScreen({
+  onNavigate,
+  showSuccessToast,
+  showInfoToast
+}: NavigationProps) {
   // ========== HELPER FUNCTIONS ==========
   const formatBalance = (balance: number): string => {
     return balance.toLocaleString('th-TH', { minimumFractionDigits: 2 });
   };
+
+  const handleServicePress = (serviceName: string, action: () => void) => {
+    showSuccessToast?.(
+      'เข้าสู่บริการ',
+      `กำลังเปิดบริการ${ serviceName }...`
+    );
+    setTimeout(action, 800);
+  };
+
+  // Show welcome message on component mount
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      showInfoToast?.(
+        'ยินดีต้อนรับสู่ K+',
+        'ข้อมูลบัญชีของคุณได้รับการอัปเดตแล้ว ระบบพร้อมให้บริการ'
+      );
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // ========== RENDER ==========
   return (
@@ -70,12 +95,13 @@ export function HomeScreen({ onNavigate }: NavigationProps) {
               label={service.label}
               onPress={() => {
                 if (service.label === 'โอนเงิน') {
-                  onNavigate('transfer');
+                  handleServicePress('โอนเงิน', () => onNavigate('transfer'));
                 } else if (service.label === 'ถอนเงิน') {
-                  onNavigate('account');
+                  handleServicePress('ถอนเงิน', () => onNavigate('account'));
                 } else {
-                  // Handle other services
-                  console.log(`${ service.label } pressed`);
+                  handleServicePress(service.label, () => {
+                    console.log(`${ service.label } pressed`);
+                  });
                 }
               }}
             />

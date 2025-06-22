@@ -18,7 +18,11 @@ import { Header } from './Header';
 import { APP_CONFIG, QUICK_SERVICES, USER_ACCOUNTS } from '../../constants';
 import { NavigationProps } from '../../types';
 
-export function AccountScreen({ onNavigate }: NavigationProps) {
+export function AccountScreen({
+  onNavigate,
+  showSuccessToast,
+  showErrorToast
+}: NavigationProps) {
   // ========== HELPER FUNCTIONS ==========
   const formatBalance = (balance: number): string => {
     return balance.toLocaleString('th-TH', { minimumFractionDigits: 2 });
@@ -27,6 +31,30 @@ export function AccountScreen({ onNavigate }: NavigationProps) {
   const getCurrentTime = (): string => {
     const now = new Date();
     return `${ now.getHours().toString().padStart(2, '0') }:${ now.getMinutes().toString().padStart(2, '0') }`;
+  };
+
+  const handleAccountInfoPress = () => {
+    showSuccessToast?.(
+      'ข้อมูลบัญชี',
+      'ข้อมูลบัญชีได้รับการอัปเดตล่าสุดเมื่อ ' + getCurrentTime() + ' น.'
+    );
+  };
+
+  const handleServicePress = (serviceName: string) => {
+    // Simulate some services being temporarily unavailable
+    const unavailableServices = ['ชำระค่าน้ำ', 'ชำระค่าไฟ'];
+
+    if (unavailableServices.includes(serviceName)) {
+      showErrorToast?.(
+        'บริการไม่พร้อมใช้งาน',
+        `ขออภัยในขณะนี้บริการ${ serviceName }ไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่อีกครั้งในภายหลัง`
+      );
+    } else {
+      showSuccessToast?.(
+        'เข้าสู่บริการ',
+        `กำลังเปิดบริการ${ serviceName }...`
+      );
+    }
   };
 
   // ========== RENDER ==========
@@ -51,17 +79,26 @@ export function AccountScreen({ onNavigate }: NavigationProps) {
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
         {/* Main Balance Circle */}
         <View className="items-center py-8">
-          <View className="w-64 h-64 rounded-full border-2 border-green-400 items-center justify-center relative bg-slate-700/50">
+          <TouchableOpacity
+            className="w-64 h-64 rounded-full border-2 border-green-400 items-center justify-center relative bg-slate-700/50 active:bg-slate-600/50"
+            onPress={handleAccountInfoPress}
+          >
             <Text className="text-gray-400 text-sm mb-2">ยอดเงินที่ใช้ได้</Text>
             <Text className="text-white text-3xl font-bold">
               {formatBalance(USER_ACCOUNTS[0].balance)}
             </Text>
 
             {/* Settings icon */}
-            <TouchableOpacity className="absolute bottom-8 right-8 w-10 h-10 bg-gray-600 rounded-full items-center justify-center">
+            <TouchableOpacity
+              className="absolute bottom-8 right-8 w-10 h-10 bg-gray-600 rounded-full items-center justify-center"
+              onPress={(e) => {
+                e.stopPropagation();
+                handleServicePress('ตั้งค่าบัญชี');
+              }}
+            >
               <Ionicons name="settings" size={20} color="white" />
             </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
 
           {/* Last update time */}
           <View className="flex-row items-center mt-4">
@@ -92,7 +129,7 @@ export function AccountScreen({ onNavigate }: NavigationProps) {
                 if (service.label === 'โอนเงิน') {
                   onNavigate('transfer');
                 } else {
-                  console.log(`${ service.label } pressed`);
+                  handleServicePress(service.label);
                 }
               }}
             />
@@ -106,7 +143,7 @@ export function AccountScreen({ onNavigate }: NavigationProps) {
               key={index}
               icon={service.icon}
               label={service.label}
-              onPress={() => console.log(`${ service.label } pressed`)}
+              onPress={() => handleServicePress(service.label)}
             />
           ))}
         </View>
@@ -123,7 +160,7 @@ export function AccountScreen({ onNavigate }: NavigationProps) {
               key={index}
               icon={service.icon}
               label={service.label}
-              onPress={() => console.log(`${ service.label } pressed`)}
+              onPress={() => handleServicePress(service.label)}
             />
           ))}
         </View>

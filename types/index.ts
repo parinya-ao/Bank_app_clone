@@ -18,6 +18,9 @@ export type ScreenType =
 // Navigation props interface for screen components
 export interface NavigationProps {
   onNavigate: (screen: ScreenType) => void;
+  showSuccessToast?: (title: string, message: string) => void;
+  showErrorToast?: (title: string, message: string) => void;
+  showInfoToast?: (title: string, message: string) => void;
 }
 
 // Account information interface

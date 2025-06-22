@@ -1,0 +1,22 @@
+name: 'Setup EAS'
+
+description: 'A GitHub Action to set up Expo Application Services (EAS) for building and deploying applications.'
+
+inputs:
+  eas-cli-version:
+    description: 'The version of EAS CLI to install.'
+    required: false
+    default: 'latest'
+
+  working-directory:
+    description: 'The directory where the EAS project is located.'
+    required: false
+    default: '.'
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+
+branding:
+  icon: 'package'
+  color: 'blue'

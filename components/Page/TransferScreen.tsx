@@ -17,7 +17,23 @@ import { TransferOption } from '../Helper/TransferOption';
 import { RECENT_RECIPIENTS, TRANSFER_OPTIONS } from '../../constants';
 import { NavigationProps } from '../../types';
 
-export function TransferScreen({ onNavigate }: NavigationProps) {
+export function TransferScreen({
+  onNavigate,
+  showErrorToast
+}: NavigationProps) {
+  const handleTransferOptionPress = () => {
+    // Simulate system check (5% chance of system error)
+    const systemAvailable = Math.random() > 0.05;
+
+    if (systemAvailable) {
+      onNavigate('selectAccount');
+    } else {
+      showErrorToast?.(
+        'ระบบไม่พร้อมใช้งาน',
+        'ขออพยในขณะนี้ระบบโอนเงินไม่พร้อมใช้งาน กรุณาลองใหม่อีกครั้งหรือติดต่อศูนย์บริการลูกค้า'
+      );
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-slate-700">
       {/* Header with back button */}
@@ -38,7 +54,7 @@ export function TransferScreen({ onNavigate }: NavigationProps) {
               title={option.title}
               subtitle={option.subtitle}
               icon={option.icon}
-              onPress={() => onNavigate('selectAccount')}
+              onPress={handleTransferOptionPress}
             />
           ))}
         </View>

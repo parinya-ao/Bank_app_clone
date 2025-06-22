@@ -12,8 +12,37 @@ import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-na
 // Import types and constants
 import { NavigationProps } from '../../types';
 
-export function ConfirmTransferScreen({ onNavigate }: NavigationProps) {
+export function ConfirmTransferScreen({
+  onNavigate,
+  showSuccessToast,
+  showErrorToast
+}: NavigationProps) {
   const [pinEntered, setPinEntered] = useState(4); // Mock PIN entry progress
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleConfirmTransfer = () => {
+    setIsProcessing(true);
+
+    // Simulate transfer processing
+    setTimeout(() => {
+      // Simulate random success/failure (80% success rate)
+      const isSuccess = Math.random() > 0.2;
+
+      if (isSuccess) {
+        showSuccessToast?.(
+          'โอนเงินสำเร็จ!',
+          'โอนเงินจำนวน 1,000.00 บาท ไปยังนายสมชาย ใจดี เรียบร้อยแล้ว'
+        );
+        setTimeout(() => onNavigate('home'), 1500);
+      } else {
+        showErrorToast?.(
+          'โอนเงินไม่สำเร็จ',
+          'ไม่สามารถโอนเงินได้ในขณะนี้ กรุณาตรวจสอบยอดเงินคงเหลือและลองใหม่อีกครั้ง'
+        );
+      }
+      setIsProcessing(false);
+    }, 2000);
+  };
   return (
     <SafeAreaView className="flex-1 bg-slate-700">
       <View className="flex-row items-center justify-between px-4 py-3">
@@ -70,13 +99,23 @@ export function ConfirmTransferScreen({ onNavigate }: NavigationProps) {
 
         {/* Confirm Button */}
         <TouchableOpacity
-          className="bg-green-500 rounded-xl py-4 mb-4"
-          onPress={() => {
-            // Show success and go back to home
-            setTimeout(() => onNavigate('home'), 1000);
-          }}
+          className={`rounded-xl py-4 mb-4 ${ isProcessing
+              ? 'bg-gray-500'
+              : 'bg-green-500 active:bg-green-600'
+            }`}
+          onPress={handleConfirmTransfer}
+          disabled={isProcessing}
         >
-          <Text className="text-white text-center font-semibold text-lg">ยืนยันการโอน</Text>
+          <View className="flex-row items-center justify-center">
+            {isProcessing && (
+              <View className="mr-2">
+                <Text className="text-white">🔄</Text>
+              </View>
+            )}
+            <Text className="text-white text-center font-semibold text-lg">
+              {isProcessing ? 'กำลังดำเนินการ...' : 'ยืนยันการโอน'}
+            </Text>
+          </View>
         </TouchableOpacity>
 
         <TouchableOpacity
