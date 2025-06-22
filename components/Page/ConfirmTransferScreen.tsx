@@ -17,7 +17,6 @@ export function ConfirmTransferScreen({
   showSuccessToast,
   showErrorToast
 }: NavigationProps) {
-  const [pinEntered, setPinEntered] = useState(4); // Mock PIN entry progress
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleConfirmTransfer = () => {
@@ -100,8 +99,8 @@ export function ConfirmTransferScreen({
         {/* Confirm Button */}
         <TouchableOpacity
           className={`rounded-xl py-4 mb-4 ${ isProcessing
-              ? 'bg-gray-500'
-              : 'bg-green-500 active:bg-green-600'
+            ? 'bg-gray-500'
+            : 'bg-green-500 active:bg-green-600'
             }`}
           onPress={handleConfirmTransfer}
           disabled={isProcessing}

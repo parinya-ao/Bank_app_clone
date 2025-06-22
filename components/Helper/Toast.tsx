@@ -7,7 +7,7 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Text, View } from 'react-native';
 
 interface ToastProps {
@@ -45,9 +45,9 @@ export function Toast({ visible, type, title, message, onHide }: ToastProps) {
 
       return () => clearTimeout(timer);
     }
-  }, [visible]);
+  }, [visible, slideAnim, opacityAnim]);
 
-  const hideToast = () => {
+  const hideToast = useCallback(() => {
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: -100,
@@ -65,7 +65,7 @@ export function Toast({ visible, type, title, message, onHide }: ToastProps) {
       slideAnim.setValue(-100);
       opacityAnim.setValue(0);
     });
-  };
+  }, [slideAnim, opacityAnim, onHide]);
 
   if (!visible) return null;
 

@@ -25,10 +25,6 @@ export function HomeScreen({
   showInfoToast
 }: NavigationProps) {
   // ========== HELPER FUNCTIONS ==========
-  const formatBalance = (balance: number): string => {
-    return balance.toLocaleString('th-TH', { minimumFractionDigits: 2 });
-  };
-
   const handleServicePress = (serviceName: string, action: () => void) => {
     showSuccessToast?.(
       'เข้าสู่บริการ',
@@ -47,7 +43,7 @@ export function HomeScreen({
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [showInfoToast]);
 
   // ========== RENDER ==========
   return (
