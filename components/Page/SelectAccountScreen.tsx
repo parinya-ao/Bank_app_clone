@@ -44,7 +44,7 @@ export function SelectAccountScreen({ onNavigate }: NavigationProps) {
               isSelected={selectedAccountId === account.id}
               onPress={() => {
                 setSelectedAccountId(account.id);
-                setTimeout(() => onNavigate('enterAmount'), 300);
+                onNavigate('enterAmount');
               }}
             />
           ))}

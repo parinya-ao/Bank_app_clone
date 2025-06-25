@@ -21,6 +21,8 @@ export interface NavigationProps {
   showSuccessToast?: (title: string, message: string) => void;
   showErrorToast?: (title: string, message: string) => void;
   showInfoToast?: (title: string, message: string) => void;
+  transferAmount?: string;
+  setTransferAmount?: (amount: string) => void;
 }
 
 // Account information interface

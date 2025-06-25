@@ -14,7 +14,7 @@ export function Header() {
   return (
     <View className="flex-row items-center justify-between px-4 py-3">
       {/* Profile Image */}
-      <View className="w-12 h-12 rounded-full bg-gray-400 overflow-hidden">
+      <View className="w-10 h-10 rounded-full bg-gray-400 overflow-hidden">
         <Image
           source={{ uri: APP_CONFIG.user.profileImage }}
           className="w-full h-full"
@@ -32,12 +32,14 @@ export function Header() {
       <View className="flex-row items-center space-x-4">
         {/* Notification Bell with Badge */}
         <View className="relative">
-          <Ionicons name="notifications-outline" size={26} color="white" />
-          <View className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" />
+          <Ionicons name="notifications-outline" size={24} color="white" />
+          <View className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full items-center justify-center">
+            <Text className="text-white text-xs font-bold">3</Text>
+          </View>
         </View>
 
         {/* Power/Settings Button */}
-        <Ionicons name="power" size={26} color="white" />
+        <Ionicons name="power" size={24} color="white" />
       </View>
     </View>
   );
