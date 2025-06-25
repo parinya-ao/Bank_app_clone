@@ -1,5 +1,23 @@
 /**
- * ==============================
+ * ===============  const handleConfirmTransfer = () => {
+    // Simulate random success/failure (50% success rate)
+    const isSuccess = Math.            <View className="border-t border-gray-600 pt-3">
+              <View className="flex-row justify-between">
+                <Text className="text-gray-400">จำนวนเงิน</Text>
+                <Text className="text-white text-lg font-semibold">
+                  {parseFloat(transferAmount).toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท
+                </Text>
+              </View>
+            </View>() > 0.8;
+
+    const formattedAmount = parseFloat(transferAmount).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+
+    if (isSuccess) {
+      showSuccessToast?.(
+        'โอนเงินสำเร็จ!',
+        `โอนเงินจำนวน ${formattedAmount} บาท ไปยังนางสาว สมใส ใจดี เรียบร้อยแล้ว`
+      );
+      onNavigate('home');=====
  * CONFIRM TRANSFER SCREEN COMPONENT
  * ==============================
  * Screen for confirming transfer details and PIN entry
@@ -15,33 +33,93 @@ import { NavigationProps } from '../../types';
 export function ConfirmTransferScreen({
   onNavigate,
   showSuccessToast,
-  showErrorToast
+  showErrorToast,
+  transferAmount = '0'
 }: NavigationProps) {
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [showFraudWarning, setShowFraudWarning] = useState(false);
 
   const handleConfirmTransfer = () => {
-    setIsProcessing(true);
+    // Simulate random success/failure (50% success rate)
+    const isSuccess = Math.random() > 0.8;
 
-    // Simulate transfer processing
-    setTimeout(() => {
-      // Simulate random success/failure (80% success rate)
-      const isSuccess = Math.random() > 0.2;
-
-      if (isSuccess) {
-        showSuccessToast?.(
-          'โอนเงินสำเร็จ!',
-          'โอนเงินจำนวน 1,000.00 บาท ไปยังนายสมชาย ใจดี เรียบร้อยแล้ว'
-        );
-        setTimeout(() => onNavigate('home'), 1500);
-      } else {
-        showErrorToast?.(
-          'โอนเงินไม่สำเร็จ',
-          'ไม่สามารถโอนเงินได้ในขณะนี้ กรุณาตรวจสอบยอดเงินคงเหลือและลองใหม่อีกครั้ง'
-        );
-      }
-      setIsProcessing(false);
-    }, 2000);
+    if (isSuccess) {
+      showSuccessToast?.(
+        'โอนเงินสำเร็จ!',
+        'โอนเงินจำนวน 1,000.00 บาท ไปยังนายสมชาย ใจดี เรียบร้อยแล้ว'
+      );
+      onNavigate('home');
+    } else {
+      // Show fraud warning screen
+      setShowFraudWarning(true);
+    }
   };
+
+  // Fraud Warning Screen
+  if (showFraudWarning) {
+    return (
+      <SafeAreaView className="flex-1 bg-red-600">
+        <View className="flex-1 px-6 py-8 justify-center items-center">
+          {/* Warning Icon */}
+          <View className="w-24 h-24 bg-red-800 rounded-full items-center justify-center mb-6">
+            <Ionicons name="warning" size={48} color="white" />
+          </View>
+
+          {/* Warning Title */}
+          <Text className="text-white text-2xl font-bold text-center mb-4">
+            ⚠️ คำเตือนความปลอดภัย
+          </Text>
+
+          {/* Warning Message */}
+          <View className="bg-red-800/50 rounded-xl p-6 mb-8">
+            <Text className="text-white text-lg font-semibold text-center mb-4">
+              บัญชีนี้ตรวจสอบแล้วว่าเป็น บช ม้า
+            </Text>
+            <Text className="text-white text-center leading-6 mb-4">
+              ระบบตรวจพบว่าบัญชีปลายทางที่คุณกำลังจะโอนเงินไปนั้น
+              มีความเสี่ยงสูงที่จะเป็นบัญชีมิจฉาชีพ
+            </Text>
+            <Text className="text-white text-center leading-6 mb-4">
+              • บัญชีนี้อาจถูกใช้ในการหลอกลวง
+            </Text>
+            <Text className="text-white text-center leading-6 mb-4">
+              • มีรายงานการใช้งานผิดปกติ
+            </Text>
+            <Text className="text-white text-center leading-6">
+              เพื่อความปลอดภัยของคุณ ธนาคารขอแนะนำให้ยกเลิกการทำรายการนี้
+            </Text>
+          </View>
+
+          {/* Action Buttons */}
+          <View className="w-full space-y-4">
+            <TouchableOpacity
+              className="bg-white rounded-xl py-4 px-6"
+              onPress={() => onNavigate('transfer')}
+            >
+              <Text className="text-red-600 text-center font-bold text-lg">
+                ✓ ยกเลิกการโอน (แนะนำ)
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="bg-red-800 rounded-xl py-4 px-6 border-2 border-red-400"
+              onPress={() => setShowFraudWarning(false)}
+            >
+              <Text className="text-white text-center font-semibold text-lg">
+                ← กลับไปแก้ไข
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Emergency Contact */}
+          <View className="mt-8 bg-red-800/30 rounded-xl p-4">
+            <Text className="text-white text-center text-sm">
+              หากถูกหลอกลวงแล้ว โทร. 1212 ตลอด 24 ชม.
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
   return (
     <SafeAreaView className="flex-1 bg-slate-700">
       <View className="flex-row items-center justify-between px-4 py-3">
@@ -98,23 +176,12 @@ export function ConfirmTransferScreen({
 
         {/* Confirm Button */}
         <TouchableOpacity
-          className={`rounded-xl py-4 mb-4 ${ isProcessing
-            ? 'bg-gray-500'
-            : 'bg-green-500 active:bg-green-600'
-            }`}
+          className="bg-green-500 active:bg-green-600 rounded-xl py-4 mb-4"
           onPress={handleConfirmTransfer}
-          disabled={isProcessing}
         >
-          <View className="flex-row items-center justify-center">
-            {isProcessing && (
-              <View className="mr-2">
-                <Text className="text-white">🔄</Text>
-              </View>
-            )}
-            <Text className="text-white text-center font-semibold text-lg">
-              {isProcessing ? 'กำลังดำเนินการ...' : 'ยืนยันการโอน'}
-            </Text>
-          </View>
+          <Text className="text-white text-center font-semibold text-lg">
+            ยืนยันการโอน
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity

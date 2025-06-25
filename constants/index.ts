@@ -63,7 +63,7 @@ export const USER_ACCOUNTS: Account[] = [
 export const RECENT_RECIPIENTS: TransferRecipient[] = [
   {
     id: 'rec_001',
-    name: 'นายสมชาย ใจดี',
+    name: 'คนกัมพูชา บัญชีม้า',
     accountNumber: 'xxx-x-xx123-x',
     bankName: 'กสิกรไทย',
     bankCode: 'KBANK',

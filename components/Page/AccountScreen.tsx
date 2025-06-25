@@ -2,7 +2,10 @@
  * ==============================
  * ACCOUNT SCREEN COMPONENT
  * ==============================
- * Main account overview screen showing account balance, transaction options, and services
+ * Main account over          <TouchableOpacity
+            className="items-center"
+            onPress={() => onNavigate('enterAmount')}
+          > screen showing account balance, transaction options, and services
  * Displays the iconic circular balance indicator matching the K+ app design
  */
 
@@ -11,11 +14,10 @@ import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-na
 
 // Import components
 import { BottomNavigation } from '../Helper/BottomNavigation';
-import { ServiceButton } from '../Helper/ServiceButton';
 import { Header } from './Header';
 
 // Import types and constants
-import { APP_CONFIG, QUICK_SERVICES, USER_ACCOUNTS } from '../../constants';
+import { USER_ACCOUNTS } from '../../constants';
 import { NavigationProps } from '../../types';
 
 export function AccountScreen({
@@ -30,7 +32,7 @@ export function AccountScreen({
 
   const getCurrentTime = (): string => {
     const now = new Date();
-    return `${ now.getHours().toString().padStart(2, '0') }:${ now.getMinutes().toString().padStart(2, '0') }`;
+    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
   };
 
   const handleAccountInfoPress = () => {
@@ -42,17 +44,17 @@ export function AccountScreen({
 
   const handleServicePress = (serviceName: string) => {
     // Simulate some services being temporarily unavailable
-    const unavailableServices = ['ชำระค่าน้ำ', 'ชำระค่าไฟ'];
+    const unavailableServices = ['Statement', 'สืบเสาะ'];
 
     if (unavailableServices.includes(serviceName)) {
       showErrorToast?.(
         'บริการไม่พร้อมใช้งาน',
-        `ขออภัยในขณะนี้บริการ${ serviceName }ไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่อีกครั้งในภายหลัง`
+        `ขออภัยในขณะนี้บริการ${serviceName}ไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่อีกครั้งในภายหลัง`
       );
     } else {
       showSuccessToast?.(
         'เข้าสู่บริการ',
-        `กำลังเปิดบริการ${ serviceName }...`
+        `กำลังเปิดบริการ${serviceName}...`
       );
     }
   };
@@ -67,7 +69,7 @@ export function AccountScreen({
       <View className="px-4 py-2">
         <TouchableOpacity className="flex-row items-center">
           <Text className="text-white font-semibold text-base mr-2">
-            {APP_CONFIG.user.name}
+            บัญชีของดิฉัน
           </Text>
           <Ionicons name="chevron-down" size={20} color="white" />
         </TouchableOpacity>
@@ -85,7 +87,7 @@ export function AccountScreen({
           >
             <Text className="text-gray-400 text-sm mb-2">ยอดเงินที่ใช้ได้</Text>
             <Text className="text-white text-3xl font-bold">
-              {formatBalance(USER_ACCOUNTS[0].balance)}
+              330.66
             </Text>
 
             {/* Settings icon */}
@@ -114,55 +116,95 @@ export function AccountScreen({
             <View className="w-2 h-2 bg-gray-600 rounded-full" />
             <View className="w-2 h-2 bg-gray-600 rounded-full" />
             <View className="w-2 h-2 bg-gray-600 rounded-full" />
-            <View className="w-2 h-2 bg-gray-600 rounded-full" />
           </View>
         </View>
 
         {/* Quick Actions - Row 1 */}
         <View className="flex-row justify-between mb-8">
-          {QUICK_SERVICES.accountRow1.map((service, index) => (
-            <ServiceButton
-              key={index}
-              icon={service.icon}
-              label={service.label}
-              onPress={() => {
-                if (service.label === 'โอนเงิน') {
-                  onNavigate('transfer');
-                } else {
-                  handleServicePress(service.label);
-                }
-              }}
-            />
-          ))}
+          <TouchableOpacity
+            className="items-center"
+            onPress={() => onNavigate('transfer')}
+          >
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="arrow-forward-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium">โอนเงิน</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('เติมเงิน')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="arrow-down-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium">เติมเงิน</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('จ่ายบิล')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="receipt-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium">จ่ายบิล</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('ถอนเงิน')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="card-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium">ถอนเงิน</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Quick Actions - Row 2 */}
         <View className="flex-row justify-between mb-8">
-          {QUICK_SERVICES.accountRow2.map((service, index) => (
-            <ServiceButton
-              key={index}
-              icon={service.icon}
-              label={service.label}
-              onPress={() => handleServicePress(service.label)}
-            />
-          ))}
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('Statement')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="document-text-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium">Statement</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('สืบเสาะ/บัตรเครดิต')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="search-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium leading-3">สืบเสาะ/{'\n'}บัตรเครดิต</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('ลงทุน')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="trending-up-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium">ลงทุน</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="items-center" onPress={() => handleServicePress('ติดต่อ/บริการ')}>
+            <View className="w-16 h-16 border border-gray-500 rounded-full items-center justify-center mb-2 bg-gray-800/50">
+              <Ionicons name="call-outline" size={24} color="white" />
+            </View>
+            <Text className="text-white text-xs text-center font-medium leading-3">ติดต่อ{'\n'}บริการ</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Other Services Section */}
         <View className="border-l-4 border-green-400 pl-3 mb-4">
-          <Text className="text-white text-lg font-semibold">บริการอื่น</Text>
+          <Text className="text-white text-lg font-semibold">บริการแนะนำ</Text>
         </View>
 
-        {/* Other Services Grid */}
-        <View className="flex-row justify-between mb-6">
-          {QUICK_SERVICES.others.map((service, index) => (
-            <ServiceButton
-              key={index}
-              icon={service.icon}
-              label={service.label}
-              onPress={() => handleServicePress(service.label)}
-            />
-          ))}
+        {/* Service Promotion Card */}
+        <View className="bg-white rounded-xl p-4 mb-6 shadow-lg">
+          <View className="flex-row items-center">
+            <View className="w-12 h-12 bg-green-500 rounded-xl items-center justify-center mr-3">
+              <Text className="text-white text-lg font-bold">💳</Text>
+            </View>
+            <View className="flex-1">
+              <Text className="text-gray-800 font-semibold text-base mb-1">
+                ปริยายจับ พิซซ่า ปล่อยใด้ วิท...
+              </Text>
+              <Text className="text-gray-600 text-sm">
+                เร็วไป่เก็บตัวจปชได้ขู่พิไร้เอาเสิร์ฟสีให่ที่ได้ ลิรหมคโครสิวาร์เตรีย...
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#6b7280" />
+          </View>
         </View>
 
         {/* Additional spacing for scroll */}

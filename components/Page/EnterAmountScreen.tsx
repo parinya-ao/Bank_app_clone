@@ -17,7 +17,8 @@ import { NavigationProps } from '../../types';
 
 export function EnterAmountScreen({
   onNavigate,
-  showErrorToast
+  showErrorToast,
+  setTransferAmount
 }: NavigationProps) {
   const [amount, setAmount] = useState('');
   const availableBalance = 50000; // Mock available balance
@@ -47,7 +48,7 @@ export function EnterAmountScreen({
     if (transferAmount > availableBalance) {
       showErrorToast?.(
         'ยอดเงินไม่เพียงพอ',
-        `ยอดเงินคงเหลือในบัญชี ${ availableBalance.toLocaleString('th-TH', { minimumFractionDigits: 2 }) } บาท ไม่เพียงพอสำหรับการโอน ${ transferAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 }) } บาท`
+        `ยอดเงินคงเหลือในบัญชี ${availableBalance.toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท ไม่เพียงพอสำหรับการโอน ${transferAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท`
       );
       return;
     }
@@ -60,13 +61,15 @@ export function EnterAmountScreen({
       return;
     }
 
+    // Save the transfer amount
+    setTransferAmount?.(amount);
     onNavigate('confirmTransfer');
   };
 
   return (
     <SafeAreaView className="flex-1 bg-slate-700">
       <View className="flex-row items-center justify-between px-4 py-3">
-        <TouchableOpacity onPress={() => onNavigate('selectAccount')}>
+        <TouchableOpacity onPress={() => onNavigate('transfer')}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-semibold">โอนเงิน</Text>
@@ -123,7 +126,7 @@ export function EnterAmountScreen({
 
         {/* Continue Button */}
         <TouchableOpacity
-          className={`rounded-xl py-4 ${ amount ? 'bg-green-500 active:bg-green-600' : 'bg-gray-600' }`}
+          className={`rounded-xl py-4 ${amount ? 'bg-green-500 active:bg-green-600' : 'bg-gray-600'}`}
           disabled={!amount}
           onPress={handleContinue}
         >

@@ -32,6 +32,7 @@ import { ScreenType } from '../types';
 export function BankApp() {
   // ========== STATE MANAGEMENT ==========
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
+  const [transferAmount, setTransferAmount] = useState<string>('');
   const { toast, showSuccessToast, showErrorToast, showInfoToast, hideToast } = useToast();
 
   // ========== NAVIGATION HANDLER ==========
@@ -45,7 +46,9 @@ export function BankApp() {
       onNavigate: handleNavigation,
       showSuccessToast,
       showErrorToast,
-      showInfoToast
+      showInfoToast,
+      transferAmount,
+      setTransferAmount
     };
 
     switch (currentScreen) {
