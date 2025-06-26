@@ -24,7 +24,7 @@ export function ConfirmTransferScreen({
 
   const [showFraudWarning, setShowFraudWarning] = useState(false);
 
-  const handleConfirmTransfer = () => {
+  const handleConfirmTransfer = async () => {
     // Simulate random success/failure (20% failure rate)
     const isSuccess = Math.random() > 0.2;
 
@@ -35,9 +35,11 @@ export function ConfirmTransferScreen({
         'โอนเงินสำเร็จ!',
         `โอนเงินจำนวน ${formattedAmount} บาท ไปยังนายสมชาย ใจดี เรียบร้อยแล้ว`
       );
+      console.log("คุณได้โอนเงินจำนวน", transferAmount);
       onNavigate('home');
     } else {
       // Show fraud warning screen
+      console.log("ชิบหาย บช ม้า");
       setShowFraudWarning(true);
     }
   };

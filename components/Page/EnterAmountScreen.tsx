@@ -65,7 +65,7 @@ export function EnterAmountScreen({
       return;
     }
 
-    console.log("จำนวนเงิน", transferAmount);
+    console.log("ได้เลือกเงิน", transferAmount);
 
     // Save the transfer amount
     setTransferAmount?.(amount);
