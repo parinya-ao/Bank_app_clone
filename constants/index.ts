@@ -63,7 +63,7 @@ export const USER_ACCOUNTS: Account[] = [
 export const RECENT_RECIPIENTS: TransferRecipient[] = [
   {
     id: 'rec_001',
-    name: 'คนกัมพูชา บัญชีม้า',
+    name: 'คุณสมชาย ใจดี',
     accountNumber: 'xxx-x-xx123-x',
     bankName: 'กสิกรไทย',
     bankCode: 'KBANK',
@@ -81,6 +81,27 @@ export const RECENT_RECIPIENTS: TransferRecipient[] = [
     accountNumber: 'xxx-x-xx789-x',
     bankName: 'ไทยพาณิชย์',
     bankCode: 'SCB',
+  },
+  {
+    id: 'rec_004',
+    name: 'คุณมาลี อ่อนหวาน',
+    accountNumber: 'xxx-x-xx321-x',
+    bankName: 'กสิกรไทย',
+    bankCode: 'KBANK',
+  },
+  {
+    id: 'rec_005',
+    name: 'นายธีรพงษ์ มั่นคง',
+    accountNumber: 'xxx-x-xx654-x',
+    bankName: 'กรุงศรีอยุธยา',
+    bankCode: 'BAY',
+  },
+  {
+    id: 'rec_006',
+    name: 'นางพิมพ์ใจ เยียวยา',
+    accountNumber: 'xxx-x-xx987-x',
+    bankName: 'ธนาคารออมสิน',
+    bankCode: 'GSB',
   },
 ] as const;
 
@@ -210,27 +231,12 @@ export const QUICK_SERVICES = {
 
 // ========== APP CONFIGURATION ==========
 export const APP_CONFIG = {
-  // User information
   user: {
-    name: 'กสิกร รักไทย',
-    profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face',
+    profileImage: 'https://via.placeholder.com/40x40/059669/ffffff?text=K',
+    name: 'ผู้ใช้ K+',
   },
-
-  // App versioning and metadata
-  version: '1.0.0',
-  appName: 'K PLUS',
-
-  // Feature flags
-  features: {
-    biometricLogin: true,
-    darkMode: true,
-    notifications: true,
-    qrScanner: true,
-  },
-
-  // API endpoints (mock)
-  api: {
-    baseUrl: 'https://api.kasikornbank.com',
-    timeout: 30000,
+  app: {
+    name: 'K+ Bank',
+    version: '1.0.0',
   },
 } as const;

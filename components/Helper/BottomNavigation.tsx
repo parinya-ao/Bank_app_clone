@@ -8,6 +8,7 @@
 
 import { Ionicons } from '@expo/vector-icons';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS, NAVIGATION_TABS } from '../../constants';
 import { ScreenType } from '../../types';
 
@@ -20,8 +21,16 @@ export function BottomNavigation({
   currentTab,
   onTabPress
 }: BottomNavigationProps) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View className="bg-gray-800 flex-row justify-around py-3 border-t border-gray-700 px-2">
+    <View
+      className="bg-gray-800 flex-row justify-around py-3 border-t border-gray-700 px-2"
+      style={{
+        paddingBottom: 8, // Ensure minimum padding of 8
+        paddingTop: 0
+      }}
+    >
       {NAVIGATION_TABS.map((tab) => {
         const isActive = currentTab === tab.id;
 
@@ -45,9 +54,9 @@ export function BottomNavigation({
               />
             )}
             <Text
-              className={`text-xs ${ isActive || tab.isSpecial
-                  ? 'text-green-500'
-                  : 'text-gray-400'
+              className={`text-xs ${isActive || tab.isSpecial
+                ? 'text-green-500'
+                : 'text-gray-400'
                 }`}
               numberOfLines={1}
             >
