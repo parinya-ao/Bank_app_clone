@@ -7,6 +7,7 @@
  */
 
 import { useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Import screen components
 import { AccountScreen } from './Page/AccountScreen';
@@ -77,7 +78,7 @@ export function BankApp() {
 
   // ========== RENDER ==========
   return (
-    <>
+    <SafeAreaProvider>
       {renderCurrentScreen()}
       <Toast
         visible={toast.visible}
@@ -86,6 +87,6 @@ export function BankApp() {
         message={toast.message}
         onHide={hideToast}
       />
-    </>
+    </SafeAreaProvider>
   );
 }

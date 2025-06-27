@@ -15,10 +15,10 @@ interface NumberButtonProps {
 export function NumberButton({ number, onPress }: NumberButtonProps) {
   return (
     <TouchableOpacity
-      className="w-20 h-16 bg-gray-800 rounded-xl items-center justify-center active:bg-gray-700 border border-gray-600"
+      className="w-20 h-16 bg-white rounded-xl items-center justify-center active:bg-gray-50 border border-gray-200 shadow-sm"
       onPress={() => onPress(number)}
     >
-      <Text className="text-white text-xl font-semibold">{number}</Text>
+      <Text className="text-gray-900 text-xl font-semibold">{number}</Text>
     </TouchableOpacity>
   );
 }

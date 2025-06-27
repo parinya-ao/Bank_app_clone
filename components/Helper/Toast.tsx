@@ -9,6 +9,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ToastProps {
   visible: boolean;
@@ -19,6 +20,8 @@ interface ToastProps {
 }
 
 export function Toast({ visible, type, title, message, onHide }: ToastProps) {
+  const insets = useSafeAreaInsets();
+
   useEffect(() => {
     if (visible) {
       // Auto hide after 2 seconds
@@ -64,7 +67,10 @@ export function Toast({ visible, type, title, message, onHide }: ToastProps) {
   const { bgColor, borderColor, iconName } = getToastStyle();
 
   return (
-    <View className="absolute top-0 left-0 right-0 z-50 px-4 pt-16">
+    <View
+      className="absolute top-0 left-0 right-0 z-50 px-4"
+      style={{ paddingTop: Math.max(insets.top, 8) + 8 }}
+    >
       <View className={`${bgColor} rounded-2xl p-4 shadow-2xl border-2 ${borderColor} mx-2`}>
         <View className="flex-row items-start">
           {/* Icon */}
